@@ -14,27 +14,35 @@ export default {
 	"one_for_one": {
 		"title": "One for One",
 		"type": "action",
-		"action": {
-			"action_type": "pop_unit"
-		}
+		"actions": [{
+			"type": "pop_unit"
+		}]
 	},
 	"gs": {
 		"title": "Great Sword",
-		"card_type": "equip",
-		"action": {
-			"type": "raise_atk_by",
+		"type": "action",
+		"actions": [{
+			"type": "raise_atk",
 			"value": 500
-		}
+		}]
 	},
 	"sns": {
 		"title": "Sword & Shield",
-		"card_type": "equip",
+		"type": "action",
 		"actions": [{
-			"type": "raise_atk_by",
+			"type": "raise_atk",
 			"value": 200
 		}, {
-			"type": "raise_def_by",
-			"value": 600
+			"type": "ward",
+		}],
+	},
+	"ward_2x": {
+		"title": "Ward 2X",
+		"type": "action",
+		"actions": [{
+			"type": "ward"
+		}, {
+			"type": "ward"
 		}]
 	}
 }

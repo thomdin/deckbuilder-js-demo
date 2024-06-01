@@ -2,32 +2,50 @@ import card_data from './card-data.js'
 import Duel from './app/duel.js'
 import BoardUI from './ui-modules/board.js'
 import CardUI from './ui-modules/card.js'
+import MainUIState from './ui-state/main-ui-state.js'
+import SelectUnitUIState from './ui-state/select-unit-ui-state.js'
+import LockedUIState from './ui-state/locked-ui-state.js'
 
 let deck_1 = [
   "unit_a",
-  "unit_b",
   "unit_a",
-  "unit_b",
   "unit_a",
-  "unit_b",
   "unit_a",
-  "unit_b",
-  // "one_for_one",
-  // "gs",
-  // "sns",
-  // "one_for_one",
-  // "gs",
-  // "sns",
+  "unit_a",
+  "unit_a",
+  "unit_a",
+  "unit_a",
+  "unit_a",
+  "unit_a",
+  // "unit_b",
+  // "unit_b",
+  "gs",
+  "gs",
+  "sns",
+  "sns",
+  "ward_2x",
+  "ward_2x",
+   "one_for_one",
+   "one_for_one",
 ]
 
 let deck_2 = [
-  "unit_a",
+  // "unit_a",
+  // "unit_a",
+  // "unit_a",
+  // "unit_a",
   "unit_b",
-  "unit_a",
   "unit_b",
-  "unit_a",
   "unit_b",
-  "unit_a",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
+  "unit_b",
   "unit_b",
   // "one_for_one",
   // "gs",
@@ -49,15 +67,18 @@ const board_ui = new BoardUI(duel_api)
 board_ui.attachTo(document.getElementById('app'))
 
 duel_api.on("draw", e => {
-  e.cards.forEach((card) => {
-    const card_ui = new CardUI(card)
-    board_ui.addToHand(e.p_key, card_ui)
-  })
+  const card_ui_list = e.cards
+    .map((card => new CardUI(card)))
+  board_ui.draw(e.p_key, card_ui_list)
 })
 
 duel_api.on("place", e => {
   board_ui.placeFromHand(e.p_key, e.card.uid, e.zone)
 })
+duel_api.on("place_action", e => {
+  board_ui.placeFromHand(e.p_key, e.card.uid, e.zone)
+})
+
 
 duel_api.on("card_destroyed", e => {
   board_ui.destroyCard(e.card)
@@ -70,6 +91,17 @@ duel_api.on("grave_updated", e => {
 duel_api.on("lp_updated", e => {
   board_ui.updateLP(e.p_key, e.diff, e.lp)
   board_ui.nodes[e.p_key].lp.innerText = e.lp
+})
+
+duel_api.on("action_resolved", e => {
+  board_ui.nextUIState(new MainUIState(board_ui, duel_api))
+  board_ui.nodes[e.p_key].action.innerHTML = ''
+})
+
+duel_api.on("request_select_unit", e => {
+  board_ui.nextUIState(new SelectUnitUIState(board_ui, duel_api, (p_key, zone_idx) => {
+    duel_api.selectUnit(p_key, zone_idx)
+  }, e))
 })
 
 board_ui.updateLP("p1", 0, 4000)
@@ -125,8 +157,8 @@ duel_api.on("turn_change", e => {
   }, delay * 2);
 })
 
-board_ui.nodes.btn_end_turn.addEventListener('click', () => {
-  duel_api.nextTurn()
+duel_api.on("finished", () => {
+  board_ui.nextUIState(new LockedUIState())
 })
-
 duel_api.start()
+board_ui.nextUIState(new MainUIState(board_ui, duel_api))

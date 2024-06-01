@@ -74,6 +74,10 @@ button[disabled] {
   background-color: #FFF
 }
 
+.card.highlight {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
 .hand {
   height: 130px;
   display: flex;
@@ -89,7 +93,7 @@ button[disabled] {
   appearance: none;
   background: #FFF;
   border: 0;
-  box-shadow none;
+  box-shadow: none;
   cursor: pointer;
   margin: 0 10px 0;
   padding: 0;
@@ -117,6 +121,10 @@ button[disabled] {
 .zone {
   border: 1px solid;
   background-color: #FFF
+}
+
+.action-zone {
+  margin: 0 10px;
 }
 
 .grave {
@@ -191,4 +199,33 @@ body.attacking .possible-attack-target {
   border: 2px solid red;
   background: transparent;
   z-index: 10
+}
+
+#win-message {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+  /*display: flex;*/
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+#win-message>div {
+  background-color: #FFF;
+  padding: 30px;
+  font-size: 20px;
+  width: 300px;
+}
+
+#win-message button {
+  margin-top: 20px;
+}
+
+#win-message button {
+  margin-top: 20px;
 }
